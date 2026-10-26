@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>ONE BITE HIGHER</title>
+<link rel="icon" href="img/favicon.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 게임 화면처럼 진남색 바탕 + 스테이지 색 포인트, 단일 다크 룩 */
+:root{
+  --ink:#1A1A2E; --deep:#0B0B14; --panel:#23234A; --line:#33335A;
+  --yellow:#FFC21A; --pink:#FF5C9A; --cyan:#4FD8FF; --green:#3FE0A0; --red:#FF4A2B; --blue:#2F6BFF;
+  --text:#FFFFFF; --muted:#A9AFCC;
+  --px:'Press Start 2P',ui-monospace,monospace; --body:'Noto Sans KR',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ink)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+img{display:block}
+.px{font-family:var(--px);letter-spacing:.02em;line-height:1.5}
+.pixel{image-rendering:pixelated}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sec{padding-block:56px 24px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.sec-title{font-family:var(--px);font-size:15px;margin:0}
+.more{font-size:14px;color:var(--muted)}
+.more:hover{color:var(--yellow)}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--ink);border-bottom:4px solid var(--deep)}
+.top .wrap{display:flex;align-items:center;gap:20px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--px);font-size:11px;color:var(--yellow)}
+.brand img{width:34px}
+nav.menu{display:flex;gap:4px;flex:1;justify-content:center;flex-wrap:wrap}
+nav.menu a{font-family:var(--px);font-size:10px;padding:10px 12px;border:3px solid transparent}
+nav.menu a.on{border-color:var(--yellow);color:var(--yellow)}
+nav.menu a:hover{color:var(--yellow)}
+.cart-btn{display:flex;align-items:center;gap:8px;font-family:var(--px);font-size:10px;padding:8px 10px;border:3px solid var(--text)}
+.cart-btn b{color:var(--yellow)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:#7EC8FF url(img/bg1.jpg) center 70%/cover no-repeat;image-rendering:pixelated}
+.hero .wrap{position:relative;min-height:500px;display:flex;flex-direction:column;align-items:center;gap:20px;padding-block:20px 0}
+.hud{align-self:stretch;display:flex;justify-content:space-between;align-items:center}
+.hud .hearts{display:flex;gap:6px}.hud .hearts img{width:24px}
+.hud .alt{font-family:var(--px);font-size:10px;background:#fff;color:var(--ink);padding:8px 10px;border:3px solid var(--ink)}
+.hero-logo{width:min(500px,80%);margin-top:6px}
+.hero-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn{font-family:var(--px);font-size:11px;padding:14px 16px;border:4px solid var(--ink);background:var(--yellow);color:var(--ink);display:inline-flex;gap:8px;align-items:center}
+.btn.dark{background:var(--ink);color:#fff;border-color:#fff}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.cast{display:flex;justify-content:center;align-items:flex-end;gap:clamp(30px,10vw,120px);margin-top:auto}
+.cast img{width:64px}
+.floaty{position:absolute;width:52px}
+.ground{height:40px;background:url(img/tile1.png) left top/auto 100% repeat-x;image-rendering:pixelated}
+.ground.s2{background-image:url(img/tile2.png)}.ground.s3{background-image:url(img/tile3.png)}
+.ground.move{animation:scroll 6s steps(24) infinite linear}
+@keyframes scroll{to{background-position-x:-384px}}
+@keyframes hop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-30px)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes blink{50%{opacity:0}}
+.hop{animation:hop 1.4s steps(6) infinite}.hop.d1{animation-delay:.45s}.hop.d2{animation-delay:.9s}
+.float{animation:float 2.4s steps(4) infinite}.float.d1{animation-delay:1.2s}
+.blink{animation:blink 1s steps(1) infinite}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(11,11,20,.78);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.trailer{position:relative;width:min(860px,100%)}
+.screen{position:relative;aspect-ratio:16/9;max-width:100%;border:6px solid var(--yellow);background:#000;overflow:hidden;box-shadow:10px 10px 0 var(--deep)}
+.screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s steps(3)}
+.screen img.on{opacity:1}
+.screen .tag{position:absolute;left:12px;top:12px;font-family:var(--px);font-size:9px;background:var(--red);padding:6px 8px;z-index:2}
+.screen .bar{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:10px 14px;background:rgba(11,11,20,.8);display:flex;gap:12px;align-items:center;font-family:var(--px);font-size:9px}
+.screen .prog{flex:1;height:8px;background:#3A3A50}.screen .prog i{display:block;height:100%;width:0;background:var(--yellow)}
+.x{position:absolute;top:-20px;right:-14px;width:48px;height:48px;background:var(--red);border:4px solid #fff;display:flex;align-items:center;justify-content:center;z-index:3}
+.screen video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;cursor:pointer}
+.tbar{display:flex;align-items:center;gap:12px;margin-top:10px;background:var(--deep);border:4px solid var(--yellow);padding:10px 12px;font-family:var(--px);font-size:9px;color:#fff}
+.tbar button{font-family:var(--px);font-size:10px;color:var(--yellow);min-width:34px;height:30px;border:2px solid var(--yellow);background:transparent}
+.tbar button:hover{background:var(--yellow);color:var(--ink)}
+.tbar .tprog{flex:1;height:12px;background:#3A3A50;cursor:pointer;position:relative}.tbar .tprog i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--yellow)}
+.tbar .tt{min-width:84px;text-align:right}
+#tbox:fullscreen{display:flex;flex-direction:column;width:100vw;height:100vh;background:#000;padding:0}
+#tbox:fullscreen .screen{flex:1;aspect-ratio:auto;border:0;box-shadow:none}
+#tbox:fullscreen .tbar{margin:0;border-width:4px 0 0}#tbox:fullscreen .tag{display:none}
+#tbox:-webkit-full-screen{display:flex;flex-direction:column;width:100vw;height:100vh;background:#000}
+#tbox:-webkit-full-screen .screen{flex:1;aspect-ratio:auto;border:0;box-shadow:none}
+#tbox:-webkit-full-screen .tbar{margin:0;border-width:4px 0 0}
+.skip{margin-top:12px;font-family:var(--px);font-size:10px;color:#fff;padding:8px 0}
+
+.loading{position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+.loading[hidden]{display:none}
+.loading .ladder{position:relative;width:80px;height:220px}
+.loading .ladder::before{content:"";position:absolute;left:18px;top:0;bottom:0;width:44px;border-left:6px solid var(--pink);border-right:6px solid var(--pink);background:repeating-linear-gradient(180deg,transparent 0 26px,var(--pink) 26px 32px)}
+.loading .ladder img{position:absolute;left:10px;bottom:0;width:60px;animation:climb 1.6s steps(8) infinite}
+@keyframes climb{to{transform:translateY(-160px)}}
+.loading .pbar{width:min(340px,80vw);height:24px;border:4px solid #fff;padding:3px}.loading .pbar i{display:block;height:100%;background:var(--yellow);animation:fill 1.6s steps(10) forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+
+/* news */
+.news{list-style:none;margin:0;padding:0;border-top:3px solid var(--line)}
+.news li{border-bottom:3px solid var(--line)}
+.news a{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:14px 0}
+.news .d{font-family:var(--px);font-size:9px;color:var(--muted)}
+.news .t{font-family:var(--px);font-size:8px;color:var(--ink);padding:6px 8px;min-width:58px;text-align:center}
+.news .ti{flex:1 1 240px;font-weight:700;font-size:16px;min-width:0}
+
+/* inventory */
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px 10px;border:4px solid var(--deep);box-shadow:4px 4px 0 var(--deep);color:var(--ink);transition:transform .1s}
+.slot .ic{height:56px;display:flex;align-items:center}
+.slot .nm{font-weight:900;font-size:14px}
+.slot .fd{font-family:var(--px);font-size:7px}
+.slot.on{transform:translateY(-6px);box-shadow:0 0 0 4px var(--yellow),6px 6px 0 var(--yellow)}
+.slot:hover .ic img{animation:hop .8s steps(4) infinite}
+.bag{margin-top:18px;background:var(--deep);border:4px solid var(--yellow);padding:24px}
+.bag-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.bag-head img{width:36px}
+.bag-head strong{font-size:21px;font-weight:900}
+.chip{font-family:var(--px);font-size:9px;background:var(--yellow);color:var(--ink);padding:6px 8px}
+
+/* product grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.card{display:flex;flex-direction:column;gap:8px;text-align:left}
+.card .ph{aspect-ratio:1/1;max-width:100%;border:4px solid #fff;overflow:hidden;background:var(--panel)}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .2s}
+.card:hover .ph img{transform:scale(1.04)}
+.card .nm{font-weight:700;font-size:15px}
+.card .pr{font-family:var(--px);font-size:9px;color:var(--yellow)}
+
+/* lookbook */
+.strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory}
+.look{flex:0 0 min(280px,75vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;text-align:left}
+.look .ph{aspect-ratio:4/5;border:4px solid #fff;overflow:hidden;background:var(--deep)}
+.look .ph img{width:100%;height:100%;object-fit:cover}
+.look .cap{font-weight:700}
+.look .tg{font-family:var(--px);font-size:8px}
+.lookgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.lookgrid .look{flex:none}
+
+/* making */
+.logs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.log{background:var(--deep);border:4px solid var(--cyan);display:flex;flex-direction:column;text-align:left}
+.log .ph{aspect-ratio:16/10;background:#F4F1EA;border-bottom:4px solid var(--cyan)}
+.log .ph img{width:100%;height:100%;object-fit:contain}
+.log .bd{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.log .no{font-family:var(--px);font-size:8px;color:var(--cyan)}
+.log .ti{font-weight:700}
+
+/* downloads */
+.dls{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.dl{background:var(--deep);border:4px solid var(--green);padding:16px;display:flex;gap:14px;align-items:center;text-align:left}
+.dl img{width:36px}
+.dl .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.dl .t b{font-size:15px}.dl .t span{font-family:var(--px);font-size:8px;color:var(--green);margin-top:6px}
+.dl .go{font-family:var(--px);color:var(--green)}
+.gdl{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.gcard{background:var(--deep);border:4px solid var(--yellow);padding:18px;display:flex;gap:16px;align-items:center}
+.gcard img{width:84px;height:84px;flex:none;border-radius:20px}
+.gcard .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.gcard .t b{font-size:17px}.gcard .t small{color:var(--muted);font-size:12px}
+.gcard .os{display:flex;gap:8px;flex-wrap:wrap}
+.gcard .os button,.gcard .os a{font-family:var(--px);font-size:9px;padding:9px 12px;border:3px solid var(--yellow);color:var(--yellow);background:transparent;text-decoration:none}
+.gcard .os button:hover,.gcard .os a:hover{background:var(--yellow);color:var(--ink)}
+.note{margin-top:12px;font-size:13px;color:var(--muted)}
+
+/* modal */
+.pm{position:relative;width:min(980px,100%);max-height:100%;overflow:auto;background:var(--ink);border:4px solid var(--yellow);display:flex;flex-wrap:wrap}
+.pm .big{flex:1 1 420px;min-width:0;background:var(--panel)}
+.pm .big img{width:100%;max-height:70vh;object-fit:contain}
+.pm .info{flex:1 1 300px;min-width:0;padding:28px;display:flex;flex-direction:column;gap:14px}
+.pm .thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.pm .thumbs button{width:64px;height:64px;border:3px solid var(--line);overflow:hidden}
+.pm .thumbs button.on{border-color:var(--yellow)}
+.pm .thumbs img{width:100%;height:100%;object-fit:cover}
+.pm h2{margin:0;font-size:24px;font-weight:900;text-wrap:balance}
+.pm .x{top:10px;right:10px}
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:300;background:var(--yellow);color:var(--ink);font-family:var(--px);font-size:10px;padding:12px 16px;border:4px solid var(--ink)}
+
+/* cart */
+.cart{position:fixed;top:0;right:0;bottom:0;z-index:120;width:min(380px,100%);background:var(--ink);border-left:4px solid var(--yellow);padding:max(20px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 20px 20px;display:flex;flex-direction:column;gap:14px}
+.cart ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;overflow:auto;flex:1}
+.cart li{display:flex;gap:10px;align-items:center}
+.cart li img{width:52px;height:52px;object-fit:cover;border:3px solid #fff}
+.cart li span{flex:1;min-width:0;font-weight:700;font-size:14px}
+.cart li button{font-family:var(--px);font-size:9px;color:var(--muted)}
+
+
+.asg{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.as{background:var(--deep);border:3px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px 10px;text-align:center}
+.as:hover{border-color:var(--yellow)}
+.as .ic{height:84px;display:flex;align-items:center;justify-content:center}
+.as .ic img{max-width:84px;max-height:84px;image-rendering:pixelated}
+.as span{font-size:12px;color:var(--muted)}
+.asec{margin-top:36px}.asec h2{font-family:var(--px);font-size:13px;margin:0 0 4px}.asec p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.stg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.stg button{display:flex;flex-direction:column;text-align:left;border:4px solid #fff;background:var(--deep)}
+.stg img.s{width:100%;aspect-ratio:16/9;object-fit:cover;image-rendering:pixelated}
+.stg .tl{height:28px;background-size:auto 100%;background-repeat:repeat-x;image-rendering:pixelated}
+.stg .bd{padding:10px 14px}
+.zoom img{image-rendering:pixelated;background:var(--panel);min-height:240px;object-fit:contain!important;padding:24px}
+
+/* 404 */
+.go404{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;background:#05051A;padding-block:40px}
+.go404 h1{font-family:var(--px);font-size:clamp(32px,8vw,64px);color:var(--red);margin:0;text-shadow:5px 5px 0 #5A1010}
+
+footer{margin-top:48px}
+footer .bot{background:#1E2A5A;padding-block:28px}
+footer .bot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:640px){
+  nav.menu{order:3;flex-basis:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}
+  .floaty{display:none}.cast img{width:52px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}}
+</style>
+
+<div id="loading" class="loading" aria-label="로딩 중">
+  <div class="ladder"><img class="pixel" src="img/helmet_climb_0.png" alt=""></div>
+  <span class="px" style="font-size:14px;color:var(--yellow)">NOW CLIMBING<span class="blink">...</span></span>
+  <div class="pbar"><i></i></div>
+  <span style="color:var(--muted);font-size:14px;text-align:center;padding:0 16px">TIP · 우유를 먹으면 뼈가 튼튼해져서 높은 데서 떨어져도 버텨요</span>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" data-go="home"><img class="pixel" src="img/mark.png" alt="">ONE BITE HIGHER</a>
+    <nav class="menu" aria-label="메인 메뉴">
+      <a href="#home" data-go="home">HOME</a>
+      <a href="#shop" data-go="shop">SHOP</a>
+      <a href="#lookbook" data-go="lookbook">LOOKBOOK</a>
+      <a href="#assets" data-go="assets">ASSETS</a>
+      <a href="#free" data-go="free">DOWNLOAD</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" aria-label="장바구니 열기">CART <b id="cartN">0</b></button>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div class="ground s3"></div>
+  <div class="bot"><div class="wrap">
+    <a class="px" style="font-size:11px" href="#home" data-go="home"><span class="blink">▶</span> CONTINUE?</a>
+    <span style="color:var(--muted);font-size:13px">© 2026 ONE BITE HIGHER · 한입 더 높이</span>
+  </div></div>
+</footer>
+
+<div id="layer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const GAME_URL='game/ko.html';
+const GAME_URL_EN='game/en.html';
+const GDL=[['ko','한국어판','한입 더 높이 · 설치형 게임',GAME_URL],['en','English','ONE BITE HIGHER · Desktop game',GAME_URL_EN]];
+const I=f=>'img/'+f;
+const CATS=[
+ {id:'bag',name:'가방',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_big1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_big2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_big3.jpg',['wear3.jpg']]]},
+ {id:'keyring',name:'키링',food:'CANDY',bg:'#F8D3E3',icon:'candy.png',w:40,items:[['아크릴 키링 3종 세트','keyrings.jpg',['keyring.jpg']],['아크릴 키링 · 헬멧','kr_helmet_bag.jpg',['keyring.jpg']],['아크릴 키링 · 비니','kr_beanie.jpg',[]],['아크릴 키링 · 가이드','kr_guide.jpg',[]]]},
+ {id:'pin',name:'핀버튼',food:'NUTS',bg:'#EAD7BE',icon:'nuts.png',w:50,items:[['핀버튼 · 로고','pin/pin01.jpg',[]],['핀버튼 · 헬멧','pin/pin02.jpg',[]],['핀버튼 · 비니','pin/pin03.jpg',[]],['핀버튼 · 가이드','pin/pin04.jpg',[]],['핀버튼 · ONE BITE 사과','pin/pin05.jpg',[]],['핀버튼 · FULL HP?','pin/pin06.jpg',[]],['핀버튼 · ONE MORE BITE!','pin/pin07.jpg',[]],['핀버튼 · 0300M 정상','pin/pin08.jpg',[]],['핀버튼 · MILK +1','pin/pin09.jpg',[]],['핀버튼 · STAGE CLEAR!','pin/pin10.jpg',[]],['핀버튼 · HIDDEN 도시락','pin/pin11.jpg',[]],['핀버튼 · DODGE! 낙석','pin/pin12.jpg',[]],['핀버튼 · 3 PLAYERS','pin/pin13.jpg',[]],['핀버튼 · ENERGY UP! 바나나','pin/pin14.jpg',[]],['핀버튼 · POWER UP','pin/pin15.jpg',[]],['핀버튼 5종 세트 (구버전)','buttons.jpg',[]]]},
+ {id:'poster',name:'포스터',food:'SALMON',bg:'#FFD9C2',icon:'salmon.png',w:60,items:[['분해도 포스터 A3','pf1.jpg',[]],['영화 포스터 A3','pf2.jpg',[]],['키비주얼 포스터 A3','pf3.jpg',['poster.jpg']]]},
+ {id:'sticker',name:'스티커',food:'APPLE',bg:'#FFC9C9',icon:'apple.png',w:50,items:[['스티커 시트 · STAGE 1','stk1.jpg',['sticker.jpg']],['스티커 시트 · STAGE 2','stk2.jpg',[]],['스티커 시트 · STAGE 3','stk3.jpg',[]]]},
+ {id:'postcard',name:'엽서',food:'EGG',bg:'#FFF3B0',icon:'egg.png',w:54,items:[['엽서 · STAGE 1','pc1.jpg',['postcard.jpg']],['엽서 · STAGE 2','pc2.jpg',[]],['엽서 · STAGE 3','pc3.jpg',[]]]},
+ {id:'note',name:'노트',food:'BANANA',bg:'#FFE58A',icon:'banana.png',w:54,items:[['스프링 노트 · STAGE 1','nb1.jpg',[]],['스프링 노트 · STAGE 2','nb2.jpg',['notebook.jpg']],['스프링 노트 · STAGE 3','nb3.jpg',[]]]},
+ {id:'mug',name:'머그·텀블러',food:'MILK',bg:'#DDF3FF',icon:'milk.png',w:36,items:[['머그 · STAGE 1','mug1.jpg',[]],['머그 · STAGE 2','mug2.jpg',[]],['머그 · STAGE 3','mug3.jpg',[]],['텀블러','tumbler.jpg',[]]]},
+ {id:'stand',name:'아크릴 스탠드',food:'SPINACH',bg:'#D4F2C8',icon:'spinach.png',w:48,items:[['다이컷 스탠드 · STAGE 1','stand1.jpg',[]],['다이컷 스탠드 · STAGE 2','stand2.jpg',[]],['다이컷 스탠드 · STAGE 3','stand3.jpg',[]]]},
+ {id:'tape',name:'마스킹테이프',food:'RICE',bg:'#F0EEE8',icon:'rice.png',w:52,items:[['마스킹테이프 · STAGE 1','tape1.jpg',[]],['마스킹테이프 · STAGE 2','tape2.jpg',[]],['마스킹테이프 · STAGE 3','tape3.jpg',[]]]},
+ {id:'tee',name:'티셔츠',food:'BEEF',bg:'#F5C9C0',icon:'beef.png',w:56,items:[['INSERT BITE 네온 티셔츠','tee_insert.jpg',[]],['STAGE CLEAR 티셔츠','tee_clear.jpg',[]]]}
+];
+const PRODUCTS=[];CATS.forEach(c=>c.items.forEach(([n,img,extra],i)=>PRODUCTS.push({id:c.id+'-'+i,cat:c.id,name:n,img,imgs:[img,...extra]})));
+const NEWS=[['2026.10.23','GOODS','#FFC21A','STAGE 3 밤 설산 컬렉션 발매'],['2026.10.20','VIDEO','#4FD8FF','공식 트레일러 공개 예정'],['2026.10.15','FREE','#3FE0A0','스테이지 배경화면 3종 무료 배포'],['2026.10.01','GAME','#FF5C9A','「한입 더 높이」 웹 버전 오픈']];
+const LOOKS=[['빅 캐릭터 에코백 · 헬멧','TOTE','#4FA8FF','wear1.jpg'],['동네 오락실에서','ARCADE','#FF5C9A','arcade_photo.jpg'],['키링 · 비니','KEYRING','#FFC21A','kr_beanie.jpg'],['빅 캐릭터 에코백 · 비니','TOTE','#4FA8FF','tote_wear.jpg'],['빨간 오락기 · STAGE 2','ARCADE','#FF5C9A','arc_red.jpg'],['키링 · 가이드','KEYRING','#FFC21A','kr_guide.jpg'],['빅 캐릭터 에코백 · 가이드','TOTE','#4FA8FF','wear3.jpg'],['집에서 한 판','ARCADE','#FF5C9A','arc_seat.jpg'],['레트로 PC로 한 판','RETRO','#3FE0A0','retro1.jpg'],['오락기 목업','ARCADE','#FF5C9A','arcade3d.jpg'],['키링 · 헬멧','KEYRING','#FFC21A','kr_helmet_bag.jpg'],['서서 한 판','ARCADE','#FF5C9A','arc_kor.jpg']];
+const LOGS=[['01','10.13','기획서 · 먹은 것이 점프가 되는 등반 플랫포머','log_plan.jpg'],['02','10.13','픽셀 시안 v2 · 네온 플랫폼 9컷','log_v2.jpg'],['03','10.13','발표 후 피드백 · 방향 전환의 계기','log_feedback.jpg'],['04','10.15','레퍼런스 · 등반 플랫포머 20컷','log_ref.jpg'],['05','10.15','주인공 v2.1 · 24×32 동작 시트','log_sprite.jpg'],['06','10.15','A안 vs B안 · 발판과 정상','log_ab.jpg'],['07','10.15','타일셋 · 바위벽 / 설산','log_tiles.jpg'],['08','10.20','게임 v26 · ONE BITE HIGHER','log_v26.jpg']];
+const AS=[
+ ['CHARACTERS','캐릭터 3명 · 동작 8가지','#FFC21A',['helmet','beanie','guide'].flatMap(c=>[['idle_0','서기'],['run_0','달리기 1'],['run_2','달리기 2'],['jump_up','점프'],['climb_0','사다리'],['eat','먹기'],['hurt','피격'],['cheer','정상']].map(([p,k])=>[c+'_'+p,({helmet:'헬멧',beanie:'비니',guide:'가이드'})[c]+' · '+k]))],
+ ['FOODS','음식 14종','#FF5C9A',[['anchovy','멸치'],['apple','사과'],['banana','바나나'],['beef','소고기'],['bento','도시락'],['candy','사탕'],['chicken','닭다리'],['egg','달걀'],['milk','우유'],['nuts','견과'],['rice','주먹밥'],['salmon','연어'],['spinach','시금치'],['veg','브로콜리']].map(([k,n])=>['f_'+k,n])],
+ ['EFFECTS','영양 오라 · 실드 · 해','#4FD8FF',[['aura_carb','탄수화물 오라'],['aura_carbF','탄수화물 오라 2'],['aura_protein','단백질 오라'],['aura_fat','지방 오라'],['aura_fatF','지방 오라 2'],['aura_iron','철분 오라'],['aura_ironF','철분 오라 2'],['aura_candy','당 오라'],['aura_candyF','당 오라 2'],['shield_ring','실드'],['sun','해']].map(([k,n])=>['e_'+k,n])],
+ ['HAZARDS','스테이지별 낙석','#FF4A2B',[1,2,3].flatMap(n=>[0,1].map(i=>['h_rock_s'+n+'_'+i,'STAGE '+n+' 돌 '+(i+1)]))],
+ ['UI','하트 · 별 · 실드','#3FE0A0',[['heart','하트'],['heart_empty','빈 하트'],['star','별'],['star_empty','빈 별'],['shield_icon','실드']].map(([k,n])=>['u_'+k,n])]
+];
+const STAGES=[['STAGE 1','철골 현장','screen1.png','tile1.png'],['STAGE 2','노을 바위벽','screen2.png','tile2.png'],['STAGE 3','밤 설산','screen3.png','tile3.png']];
+const DLF=['anchovy','apple','banana','beef','bento','candy','chicken','egg','milk','nuts','rice','salmon','spinach','veg','helmet_cheer','beanie_cheer','guide_cheer','helmet_run_1','beanie_run_1','guide_run_1','heart','star','shield_icon'].map(k=>'dl/sticker_'+k+'.png');
+const DLS=[['스테이지 배경화면 6장 (PC · 모바일)','ZIP · PNG 6장','ONE_BITE_HIGHER_wallpapers.zip','block.png',[1,2,3].flatMap(n=>['dl/wallpaper_S'+n+'_PC.png','dl/wallpaper_S'+n+'_mobile.png'])],['픽셀 스티커 팩 (캐릭터 · 음식 · UI)','ZIP · PNG 23장','ONE_BITE_HIGHER_sticker_pack.zip','ui_star.png',DLF],['A3 포스터 3종 원본','ZIP · PNG 3장','ONE_BITE_HIGHER_posters_A3.zip','mark.png',['EXPLODED','MOVIE','KEYVISUAL'].map(k=>'dl/poster_'+k+'_A3.png')]];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let state={cat:0,shopCat:'all'};
+let cart=[];try{cart=JSON.parse(localStorage.getItem('obh_cart')||'[]')}catch(e){cart=[]}
+const saveCart=()=>{try{localStorage.setItem('obh_cart',JSON.stringify(cart))}catch(e){};$('#cartN').textContent=cart.length};
+
+function card(p){return `<button class="card" data-p="${p.id}"><div class="ph"><img src="${I(p.img)}" alt="${esc(p.name)}" loading="lazy"></div><span class="nm">${esc(p.name)}</span><span class="pr">[가격]원</span></button>`}
+function lookCard(l){return `<button class="look" data-img="${l[3]}" data-cap="${esc(l[0])}"><div class="ph"><img src="${I(l[3])}" alt="${esc(l[0])}" loading="lazy"></div><span class="cap">${esc(l[0])}</span><span class="tg" style="color:${l[2]}">${l[1]}</span></button>`}
+function logCard(g){return `<button class="log" data-img="${g[3]}" data-cap="${esc(g[2])}"><div class="ph"><img src="${I(g[3])}" alt="" loading="lazy"></div><div class="bd"><span class="no">LOG ${g[0]} · ${g[1]}</span><span class="ti">${esc(g[2])}</span></div></button>`}
+function asCard(a){return `<button class="as" data-img="as/${a[0]}.png" data-cap="${esc(a[1])}" data-zoom="1"><span class="ic"><img src="img/as/${a[0]}.png" alt="" loading="lazy"></span><span>${esc(a[1])}</span></button>`}
+function gameDl(){return `<div class="gdl">${GDL.map(g=>`<div class="gcard"><img src="img/app_icon.png" alt=""><div class="t"><b>${g[1]}</b><small>${g[2]} · 아이콘 더블클릭으로 바로 실행</small><div class="os"><button data-gdl="${g[0]}_mac">MAC</button><button data-gdl="${g[0]}_win">WINDOWS</button><a href="${g[3]}" target="_blank" rel="noopener">▶ 웹에서</a></div></div></div>`).join('')}</div>`}
+function dlCard(d,i){return `<button class="dl" data-dl="${i}"><img class="pixel" src="${I(d[3])}" alt=""><span class="t"><b>${esc(d[0])}</b><span>${d[1]}</span></span><span class="go">↓</span></button>`}
+
+function inventory(){
+  const c=CATS[state.cat];
+  return `<div class="slots">${CATS.map((s,i)=>`<button class="slot${i===state.cat?' on':''}" data-cat="${i}" style="background:${s.bg}" aria-pressed="${i===state.cat}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.food}</span></button>`).join('')}</div>
+  <div class="bag"><div class="bag-head"><img class="pixel" src="${I(c.icon)}" alt=""><strong>${c.name}</strong><span class="chip">${c.food} GET! · ${c.items.length}개</span></div>
+  <div class="grid">${PRODUCTS.filter(p=>p.cat===c.id).map(card).join('')}</div></div>`;
+}
+
+const VIEWS={
+ home:()=>`
+  <section class="hero" aria-label="게임 월드">
+    <div class="wrap">
+      <div class="hud"><div class="hearts"><img class="pixel" src="img/ui_heart.png" alt=""><img class="pixel" src="img/ui_heart.png" alt=""><img class="pixel" src="img/ui_heart.png" alt=""></div><span class="alt">ALT 0000M</span></div>
+      <img class="hero-logo pixel" src="img/logo_yellow.png" alt="ONE BITE HIGHER">
+      <div class="hero-btns">
+        <a class="btn" href="${GAME_URL}" target="_blank" rel="noopener"><span class="blink">▶</span> PRESS START</a>
+        <button class="btn dark" data-act="trailer">WATCH TRAILER</button>
+        <a class="btn dark" href="#shop" data-go="shop">ITEM SHOP</a>
+      </div>
+      <img class="floaty float pixel" src="img/apple.png" alt="" style="left:7%;top:120px">
+      <img class="floaty float d1 pixel" src="img/block.png" alt="" style="left:16%;top:240px;width:46px">
+      <img class="floaty float d1 pixel" src="img/spinach.png" alt="" style="right:9%;top:110px">
+      <img class="floaty float pixel" src="img/milk.png" alt="" style="right:17%;top:250px;width:36px">
+      <div class="cast"><img class="hop pixel" src="img/big_beanie_run_1.png" alt=""><img class="hop d1 pixel" src="img/big_helmet_jump_up.png" alt=""><img class="hop d2 pixel" src="img/big_guide_run_1.png" alt="" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="ground move"></div>
+  </section>
+  <div class="wrap">
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">NEWS</h2></div>
+      <ul class="news">${NEWS.map(n=>`<li><a href="#home"><span class="d">${n[0]}</span><span class="t" style="background:${n[2]}">${n[1]}</span><span class="ti">${n[3]}</span><span class="px" style="font-size:10px;color:var(--yellow)">▶</span></a></li>`).join('')}</ul></section>
+    <section class="sec" id="inv"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">INVENTORY</h2><a class="more" href="#shop" data-go="shop">전체 굿즈 ${PRODUCTS.length}종 &gt;</a></div><div id="invBody">${inventory()}</div></section>
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--pink)">LOOKBOOK</h2><a class="more" href="#lookbook" data-go="lookbook">전체 보기 &gt;</a></div><div class="strip">${LOOKS.map(lookCard).join('')}</div></section>
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--cyan)">GAME ASSETS</h2><a class="more" href="#assets" data-go="assets">에셋 전체 보기 &gt;</a></div><div class="asg">${[...AS[0][3].filter((_,i)=>i%8===7),...AS[1][3].slice(0,9)].map(asCard).join('')}</div></section>
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">GET THE GAME</h2><a class="more" href="#free" data-go="free">설치 방법 &gt;</a></div>${gameDl()}<p class="note" id="gNote"></p></section>
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--green)">FREE DOWNLOAD</h2></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote"></p></section>
+  </div>`,
+ shop:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">ITEM SHOP</h1><span class="more">${PRODUCTS.length}개 아이템</span></div>
+   <div class="slots" style="margin-bottom:24px"><button class="slot${state.shopCat==='all'?' on':''}" data-shop="all" style="background:#fff"><span class="ic"><img class="pixel" src="img/block.png" alt="" style="width:44px"></span><span class="nm">전체</span><span class="fd">ALL</span></button>${CATS.map(s=>`<button class="slot${state.shopCat===s.id?' on':''}" data-shop="${s.id}" style="background:${s.bg}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.food}</span></button>`).join('')}</div>
+   <div class="grid">${PRODUCTS.filter(p=>state.shopCat==='all'||p.cat===state.shopCat).map(card).join('')}</div></section></div>`,
+ lookbook:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--pink);font-size:20px">LOOKBOOK</h1></div><div class="lookgrid">${LOOKS.map(lookCard).join('')}</div></section></div>`,
+ assets:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--cyan);font-size:20px">GAME ASSETS</h1><span class="more">게임에 실제로 쓰인 픽셀 에셋</span></div>
+   <div class="asec" style="margin-top:0"><h2 style="color:var(--yellow)">STAGES</h2><p>스테이지 화면과 바닥 타일</p><div class="stg">${STAGES.map(t=>`<button data-img="${t[2]}" data-cap="${t[0]} · ${t[1]}" data-zoom="1"><img class="s" src="img/${t[2]}" alt=""><div class="tl" style="background-image:url(img/${t[3]})"></div><div class="bd"><span class="px" style="font-size:10px">${t[0]}</span> <b style="margin-left:6px">${t[1]}</b></div></button>`).join('')}</div></div>
+   ${AS.map(g=>`<div class="asec"><h2 style="color:${g[2]}">${g[0]}</h2><p>${g[1]}</p><div class="asg">${g[3].map(asCard).join('')}</div></div>`).join('')}
+   </section></div>`,
+ free:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">GET THE GAME</h1></div>${gameDl()}<p class="note" id="gNote">Mac: 압축을 풀고 앱을 더블클릭해요. 처음에 "열지 않음" 창이 뜨면 완료 → 시스템 설정 › 개인정보 보호 및 보안 › 그래도 열기. · Windows: 압축을 풀고 설치하기.cmd(Install.cmd)를 실행하면 바탕화면에 아이콘이 생겨요.</p></section><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--green);font-size:20px">FREE DOWNLOAD</h1></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote">받기를 누르면 저장할지 한 번 물어봐요.</p></section></div>`,
+ notfound:()=>`<section class="go404"><span class="px" style="font-size:12px;color:var(--muted)">ERROR 404</span><h1>GAME OVER</h1><p style="margin:0">길을 잃었어요. 찾는 페이지가 없어요.</p><a class="btn" href="#home" data-go="home"><span class="blink">▶</span> CONTINUE?</a><img class="pixel" src="img/helmet_cheer.png" alt="" style="width:80px;transform:rotate(80deg);margin-top:20px"></section>`
+};
+
+function go(v,push=true){
+  if(!VIEWS[v])v='notfound';
+  $('#app').innerHTML=VIEWS[v]();
+  document.querySelectorAll('nav.menu a').forEach(a=>a.classList.toggle('on',a.dataset.go===v));
+  if(push){try{history.replaceState(null,'','#'+v)}catch(e){}}
+  window.scrollTo(0,0);
+}
+
+/* trailer: 영상이 준비되면 TRAILER_SRC 에 mp4 경로를 넣으면 실제 영상이 재생돼요 */
+const TRAILER_SRC='video/trailer.mp4';
+let slideT;
+function openTrailer(){
+  const shots=['screen1.png','screen2.png','screen3.png'];
+  if(TRAILER_SRC){
+    $('#layer').innerHTML=`<div class="overlay" id="tr" role="dialog" aria-label="트레일러"><div class="trailer">
+    <div id="tbox"><div class="screen"><video id="tv" src="${TRAILER_SRC}" autoplay muted playsinline preload="auto"></video><span class="tag blink">● TRAILER</span></div>
+    <div class="tbar"><button id="tPlay" aria-label="재생/일시정지">❚❚</button><button id="tMute" aria-label="소리 켜기">♪ OFF</button>
+      <span class="tprog" id="tProg" role="slider" aria-label="재생 위치"><i id="prog"></i></span><span class="tt" id="tTime">0:00 / 1:00</span><button id="tFull" aria-label="전체 화면">⛶</button></div></div>
+    <button class="x" data-act="close" aria-label="트레일러 닫기"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#fff" stroke-width="4"></path></svg></button>
+    <button class="skip" data-act="close">SKIP ▶▶</button></div></div>`;
+    const v=$('#tv'),bar=$('#prog'),tm=$('#tTime'),pl=$('#tPlay'),mu=$('#tMute');
+    const f=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+    const tick=()=>{if(!document.body.contains(v))return;const d=v.duration||60;bar.style.width=(v.currentTime/d*100)+'%';tm.textContent=f(v.currentTime)+' / '+f(d);requestAnimationFrame(tick)};
+    requestAnimationFrame(tick);
+    const sync=()=>{pl.textContent=v.paused?'▶':'❚❚';mu.textContent=v.muted?'♪ OFF':'♪ ON'};
+    v.addEventListener('play',sync);v.addEventListener('pause',sync);v.addEventListener('volumechange',sync);
+    v.addEventListener('click',()=>v.paused?v.play():v.pause());
+    pl.onclick=()=>v.paused?v.play():v.pause();
+    mu.onclick=()=>{v.muted=!v.muted;if(!v.muted&&v.paused)v.play()};
+    $('#tProg').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();v.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*(v.duration||60)};
+    $('#tFull').onclick=()=>{const box=$('#tbox');const cur=document.fullscreenElement||document.webkitFullscreenElement;
+      if(cur){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
+      const fs=box.requestFullscreen||box.webkitRequestFullscreen;if(fs)fs.call(box);else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen()};
+    v.play().catch(()=>{});sync();clearInterval(slideT);return;
+  }
+  $('#layer').innerHTML=`<div class="overlay" id="tr" role="dialog" aria-label="트레일러"><div class="trailer">
+    <div class="screen">${TRAILER_SRC?`<video src="${TRAILER_SRC}" autoplay muted playsinline controls style="width:100%;height:100%"></video>`:shots.map((s,i)=>`<img class="pixel${i?'':' on'}" src="img/${s}" alt="">`).join('')}
+      <span class="tag blink">● TRAILER</span>
+      <div class="bar"><span>${TRAILER_SRC?'':'COMING SOON'}</span><span class="prog"><i id="prog"></i></span><span>1:00</span></div></div>
+    <button class="x" data-act="close" aria-label="트레일러 닫기"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#fff" stroke-width="4"></path></svg></button>
+    <button class="skip" data-act="close">SKIP ▶▶</button></div></div>`;
+  let k=0,p=0;clearInterval(slideT);
+  slideT=setInterval(()=>{p=(p+1)%100;const b=$('#prog');if(!b){clearInterval(slideT);return}b.style.width=p+'%';if(p%33===0){k=(k+1)%3;document.querySelectorAll('.screen img').forEach((im,i)=>im.classList.toggle('on',i===k))}},100);
+}
+function closeLayer(){clearInterval(slideT);$('#layer').innerHTML=''}
+
+function openProduct(id){
+  const p=PRODUCTS.find(x=>x.id===id);if(!p)return;const c=CATS.find(x=>x.id===p.cat);
+  $('#layer').innerHTML=`<div class="overlay" role="dialog" aria-label="${esc(p.name)}"><div class="pm">
+   <div class="big"><img id="pmBig" src="${I(p.img)}" alt="${esc(p.name)}"></div>
+   <div class="info"><span class="chip" style="align-self:flex-start;background:${c.bg}">${c.name} · ${c.food}</span><h2>${esc(p.name)}</h2>
+    <span class="px" style="font-size:12px;color:var(--yellow)">[가격]원</span>
+    <p style="margin:0;color:var(--muted)">ONE BITE HIGHER 공식 굿즈예요. 상세 정보는 준비 중이에요.</p>
+    ${p.imgs.length>1?`<div class="thumbs">${p.imgs.map((m,i)=>`<button data-thumb="${m}" class="${i?'':'on'}" aria-label="사진 ${i+1}"><img src="${I(m)}" alt=""></button>`).join('')}</div>`:''}
+    <button class="btn" data-add="${p.id}" style="align-self:flex-start">+ 장바구니 담기</button></div>
+   <button class="x" data-act="close" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#fff" stroke-width="4"></path></svg></button></div></div>`;
+}
+function openImage(img,cap,zoom){
+  $('#layer').innerHTML=`<div class="overlay" role="dialog" aria-label="${cap}"><div class="pm" style="flex-direction:column"><div class="big${zoom?' zoom':''}" style="flex:none"><img src="${I(img)}" alt="${cap}"></div><div class="info" style="flex:none;padding:16px 20px"><strong>${cap}</strong></div><button class="x" data-act="close" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#fff" stroke-width="4"></path></svg></button></div></div>`;
+}
+function openCart(){
+  const items=cart.map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id);return p?`<li><img src="${I(p.img)}" alt=""><span>${esc(p.name)}</span><button data-rm="${i}">빼기</button></li>`:''}).join('');
+  $('#layer').innerHTML=`<div class="overlay" data-act="close" style="justify-content:flex-end;padding:0"></div><aside class="cart" role="dialog" aria-label="장바구니">
+   <div style="display:flex;justify-content:space-between;align-items:center"><span class="px" style="font-size:13px;color:var(--yellow)">INVENTORY</span><button data-act="close" class="px" style="font-size:10px">닫기 ✕</button></div>
+   ${cart.length?`<ul>${items}</ul><button class="btn" data-act="order">주문하기 (${cart.length})</button><p class="note" id="orderNote"></p>`:`<p style="color:var(--muted)">아직 담은 아이템이 없어요.</p><a class="btn" href="#shop" data-go="shop" style="align-self:flex-start">ITEM SHOP 가기</a>`}</aside>`;
+}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1600)}
+
+async function gameDownload(key){
+  const note=$('#gNote');const say=t=>{if(note)note.textContent=t};
+  const zipName='ONE_BITE_HIGHER_'+key.split('_')[0].toUpperCase()+'_'+key.split('_')[1]+'.zip';
+  let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  if(!dl){const a=document.createElement('a');a.href='dl/game/'+zipName;a.download=zipName;document.body.appendChild(a);a.click();a.remove();toast('GET! '+zipName);return}
+  say('게임을 포장하는 중이에요…');
+  try{
+    const m=await (await fetch('dl/game/'+key+'.json')).json();
+    const z=new JSZip();
+    for(const f of m.files){z.file(f.p,f.t!=null?f.t:f.b,{base64:f.t==null,unixPermissions:f.m,date:new Date()})}
+    const blob=await z.generateAsync({type:'blob',platform:'UNIX',compression:'DEFLATE'});
+    await dl.save({filename:m.zip,data:blob});say('');toast('GET! '+m.zip);
+  }catch(e){say(e&&e.code==='declined'?'저장을 취소했어요.':'게임 파일을 만들지 못했어요. 잠시 후 다시 눌러주세요.')}
+}
+async function download(i){
+  const d=DLS[i];const note=$('#dlNote');const say=t=>{if(note)note.textContent=t};
+  let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  if(!dl){ // 내 컴퓨터에서 열었을 때: 파일을 하나씩 바로 내려받기
+    for(const f of d[4]){const a=document.createElement('a');a.href=f;a.download=f.split('/').pop();document.body.appendChild(a);a.click();a.remove();await new Promise(r=>setTimeout(r,300))}
+    say('');toast('GET! '+d[4].length+'개 파일');return}
+  say('파일을 모으는 중이에요…');
+  try{
+    const files=await Promise.all(d[4].map(async f=>[f.split('/').pop(),await (await fetch(f)).blob()]));
+    if(window.JSZip){
+      const z=new JSZip();files.forEach(([n,b])=>z.file(n,b));
+      try{await dl.save({filename:d[2],data:await z.generateAsync({type:'blob'})});say('');toast('GET! '+d[2]);return}
+      catch(e){if(!e||(e.code!=='rejected_extension'&&e.code!=='extension_not_enabled'))throw e}
+    }
+    for(const [n,b] of files){await dl.save({filename:n,data:b})}
+    say('');toast('GET! '+files.length+'개 파일');
+  }catch(e){say(e&&e.code==='declined'?'저장을 취소했어요.':'파일을 저장하지 못했어요. 잠시 후 다시 눌러주세요.')}
+}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-go],[data-act],[data-cat],[data-shop],[data-p],[data-img],[data-dl],[data-gdl],[data-add],[data-thumb],[data-rm],#cartBtn');
+  if(!t)return;
+  if(t.id==='cartBtn'){openCart();return}
+  if(t.dataset.go){e.preventDefault();closeLayer();go(t.dataset.go);return}
+  const a=t.dataset.act;
+  if(a==='trailer'){openTrailer();return}
+  if(a==='close'){closeLayer();return}
+  if(a==='order'){const n=$('#orderNote');if(n)n.textContent='결제는 아직 연결 전이에요. 오픈하면 여기서 바로 주문할 수 있어요.';return}
+  if(t.dataset.cat!==undefined){state.cat=+t.dataset.cat;$('#invBody').innerHTML=inventory();return}
+  if(t.dataset.shop){state.shopCat=t.dataset.shop;go('shop',false);return}
+  if(t.dataset.p){openProduct(t.dataset.p);return}
+  if(t.dataset.thumb){$('#pmBig').src=I(t.dataset.thumb);t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));return}
+  if(t.dataset.add){cart.push(t.dataset.add);saveCart();toast('ITEM GET! 장바구니에 담았어요');closeLayer();return}
+  if(t.dataset.rm!==undefined){cart.splice(+t.dataset.rm,1);saveCart();openCart();return}
+  if(t.dataset.img){openImage(t.dataset.img,t.dataset.cap,t.dataset.zoom);return}
+  if(t.dataset.dl!==undefined){download(+t.dataset.dl);return}
+  if(t.dataset.gdl){gameDownload(t.dataset.gdl);return}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLayer()});
+
+saveCart();
+const start=(location.hash||'#home').slice(1)||'home';
+go(start,false);
+setTimeout(()=>{$('#loading').hidden=true;if(start==='home')openTrailer()},1700);
+</script>
+</body>
+</html>
