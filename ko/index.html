@@ -9,7 +9,7 @@
 (function(){
   var ua=navigator.userAgent, q=location.search;
   var mobile=/Android|iPhone|iPod|Mobile|iPad/i.test(ua) || (navigator.maxTouchPoints>1 && /Macintosh/.test(ua));
-  if(q.indexOf('send')<0 && (!mobile || q.indexOf('play')>=0)) location.replace('../game/ko.html');
+  if(q.indexOf('send')<0 && (!mobile || q.indexOf('play')>=0)) location.replace('../game/ko.html'+(q.indexOf('play')>=0?'?play':''));
 })();
 </script>
 <noscript><meta http-equiv="refresh" content="0;url=../game/ko.html"></noscript>
@@ -55,7 +55,7 @@ h1{font-size:24px;line-height:1.35;font-weight:900;margin:0}
   </div>
   <div class="tip">아이폰 + 맥북이면 <b>보내기 → AirDrop → 내 맥</b>을 누르면 맥에서 바로 열려요.<br>카톡이면 <b>나와의 채팅</b>으로 보내고 노트북 카톡에서 열면 돼요.</div>
   <div class="url"><small>노트북 Chrome 주소창에 직접 입력해도 돼요</small><code id="u">hwkang1996-dotcom.github.io/<wbr>one-bite-higher/ko/</code></div>
-  <div class="links"><a href="../game/ko.html">그래도 폰으로 구경하기 ›</a><a href="../en/?send">English version ›</a></div>
+  <div class="links"><a href="../game/ko.html?play">그래도 폰으로 구경하기 ›</a><a href="../en/?send">English version ›</a></div>
 </main>
 <div class="toast" id="toast"></div>
 <script>
