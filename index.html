@@ -171,6 +171,8 @@ nav.menu a:hover{color:var(--yellow)}
 .gcard .os{display:flex;gap:8px;flex-wrap:wrap}
 .gcard .os button,.gcard .os a{font-family:var(--px);font-size:9px;padding:9px 12px;border:3px solid var(--yellow);color:var(--yellow);background:transparent;text-decoration:none}
 .gcard .os button:hover,.gcard .os a:hover{background:var(--yellow);color:var(--ink)}
+.gcard .os a.play{font-size:12px;padding:12px 22px;background:var(--yellow);color:var(--ink)}
+.gcard .os a.play:hover{background:#fff;border-color:#fff}
 .note{margin-top:12px;font-size:13px;color:var(--muted)}
 
 /* modal */
@@ -239,6 +241,7 @@ footer .bot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
       <a href="#shop" data-go="shop">SHOP</a>
       <a href="#lookbook" data-go="lookbook">LOOKBOOK</a>
       <a href="#assets" data-go="assets">ASSETS</a>
+      <a href="#play" data-go="play">PLAY</a>
       <a href="#free" data-go="free">DOWNLOAD</a>
     </nav>
     <button class="cart-btn" id="cartBtn" aria-label="장바구니 열기">CART <b id="cartN">0</b></button>
@@ -261,7 +264,7 @@ footer .bot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
 <script>
 const GAME_URL='game/ko.html';
 const GAME_URL_EN='game/en.html';
-const GDL=[['ko','한국어판','한입 더 높이 · 설치형 게임',GAME_URL],['en','English','ONE BITE HIGHER · Desktop game',GAME_URL_EN]];
+const GDL=[['ko','한국어판','한입 더 높이 · 브라우저에서 바로 플레이',GAME_URL],['en','English','ONE BITE HIGHER · Play in your browser',GAME_URL_EN]];
 const I=f=>'img/'+f;
 const CATS=[
  {id:'bag',name:'가방',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_big1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_big2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_big3.jpg',['wear3.jpg']]]},
@@ -301,7 +304,7 @@ function card(p){return `<button class="card" data-p="${p.id}"><div class="ph"><
 function lookCard(l){return `<button class="look" data-img="${l[3]}" data-cap="${esc(l[0])}"><div class="ph"><img src="${I(l[3])}" alt="${esc(l[0])}" loading="lazy"></div><span class="cap">${esc(l[0])}</span><span class="tg" style="color:${l[2]}">${l[1]}</span></button>`}
 function logCard(g){return `<button class="log" data-img="${g[3]}" data-cap="${esc(g[2])}"><div class="ph"><img src="${I(g[3])}" alt="" loading="lazy"></div><div class="bd"><span class="no">LOG ${g[0]} · ${g[1]}</span><span class="ti">${esc(g[2])}</span></div></button>`}
 function asCard(a){return `<button class="as" data-img="as/${a[0]}.png" data-cap="${esc(a[1])}" data-zoom="1"><span class="ic"><img src="img/as/${a[0]}.png" alt="" loading="lazy"></span><span>${esc(a[1])}</span></button>`}
-function gameDl(){return `<div class="gdl">${GDL.map(g=>`<div class="gcard"><img src="img/app_icon.png" alt=""><div class="t"><b>${g[1]}</b><small>${g[2]} · 아이콘 더블클릭으로 바로 실행</small><div class="os"><button data-gdl="${g[0]}_mac">MAC</button><button data-gdl="${g[0]}_win">WINDOWS</button><a href="${g[3]}" target="_blank" rel="noopener">▶ 웹에서</a></div></div></div>`).join('')}</div>`}
+function gameDl(){return `<div class="gdl">${GDL.map(g=>`<div class="gcard"><img src="img/app_icon.png" alt=""><div class="t"><b>${g[1]}</b><small>${g[2]}</small><div class="os"><a class="play" href="${g[3]}" target="_blank" rel="noopener"><span class="blink">▶</span> PLAY</a></div></div></div>`).join('')}</div>`}
 function dlCard(d,i){return `<button class="dl" data-dl="${i}"><img class="pixel" src="${I(d[3])}" alt=""><span class="t"><b>${esc(d[0])}</b><span>${d[1]}</span></span><span class="go">↓</span></button>`}
 
 function inventory(){
@@ -336,7 +339,7 @@ const VIEWS={
     <section class="sec" id="inv"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">INVENTORY</h2><a class="more" href="#shop" data-go="shop">전체 굿즈 ${PRODUCTS.length}종 &gt;</a></div><div id="invBody">${inventory()}</div></section>
     <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--pink)">LOOKBOOK</h2><a class="more" href="#lookbook" data-go="lookbook">전체 보기 &gt;</a></div><div class="strip">${LOOKS.map(lookCard).join('')}</div></section>
     <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--cyan)">GAME ASSETS</h2><a class="more" href="#assets" data-go="assets">에셋 전체 보기 &gt;</a></div><div class="asg">${[...AS[0][3].filter((_,i)=>i%8===7),...AS[1][3].slice(0,9)].map(asCard).join('')}</div></section>
-    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">GET THE GAME</h2><a class="more" href="#free" data-go="free">설치 방법 &gt;</a></div>${gameDl()}<p class="note" id="gNote"></p></section>
+    <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--yellow)">PLAY THE GAME</h2><a class="more" href="#play" data-go="play">플레이 &gt;</a></div>${gameDl()}</section>
     <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--green)">FREE DOWNLOAD</h2></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote"></p></section>
   </div>`,
  shop:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">ITEM SHOP</h1><span class="more">${PRODUCTS.length}개 아이템</span></div>
@@ -347,7 +350,8 @@ const VIEWS={
    <div class="asec" style="margin-top:0"><h2 style="color:var(--yellow)">STAGES</h2><p>스테이지 화면과 바닥 타일</p><div class="stg">${STAGES.map(t=>`<button data-img="${t[2]}" data-cap="${t[0]} · ${t[1]}" data-zoom="1"><img class="s" src="img/${t[2]}" alt=""><div class="tl" style="background-image:url(img/${t[3]})"></div><div class="bd"><span class="px" style="font-size:10px">${t[0]}</span> <b style="margin-left:6px">${t[1]}</b></div></button>`).join('')}</div></div>
    ${AS.map(g=>`<div class="asec"><h2 style="color:${g[2]}">${g[0]}</h2><p>${g[1]}</p><div class="asg">${g[3].map(asCard).join('')}</div></div>`).join('')}
    </section></div>`,
- free:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">GET THE GAME</h1></div>${gameDl()}<p class="note" id="gNote">Mac: 압축을 풀고 앱을 더블클릭해요. 처음에 "열지 않음" 창이 뜨면 완료 → 시스템 설정 › 개인정보 보호 및 보안 › 그래도 열기. · Windows: 압축을 풀고 설치하기.cmd(Install.cmd)를 실행하면 바탕화면에 아이콘이 생겨요.</p></section><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--green);font-size:20px">FREE DOWNLOAD</h1></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote">받기를 누르면 저장할지 한 번 물어봐요.</p></section></div>`,
+ play:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">PLAY THE GAME</h1><span class="more">설치 없이 브라우저에서 바로 · No install</span></div>${gameDl()}<p class="note">노트북 Chrome 주소창에 입력해도 돼요 · KO <b>hwkang1996-dotcom.github.io/one-bite-higher/ko</b> · EN <b>hwkang1996-dotcom.github.io/one-bite-higher/en</b></p></section></div>`,
+ free:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--green);font-size:20px">FREE DOWNLOAD</h1></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote">받기를 누르면 저장할지 한 번 물어봐요.</p></section></div>`,
  notfound:()=>`<section class="go404"><span class="px" style="font-size:12px;color:var(--muted)">ERROR 404</span><h1>GAME OVER</h1><p style="margin:0">길을 잃었어요. 찾는 페이지가 없어요.</p><a class="btn" href="#home" data-go="home"><span class="blink">▶</span> CONTINUE?</a><img class="pixel" src="img/helmet_cheer.png" alt="" style="width:80px;transform:rotate(80deg);margin-top:20px"></section>`
 };
 
