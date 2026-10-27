@@ -118,7 +118,8 @@ nav.menu a:hover{color:var(--yellow)}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
 .slot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 4px 10px;border:4px solid var(--deep);box-shadow:4px 4px 0 var(--deep);color:var(--ink);transition:transform .1s}
 .slot .ic{height:56px;display:flex;align-items:center}
-.slot .nm{font-weight:900;font-size:14px}
+.slot .nm{font-weight:900;font-size:14px;line-height:1.2}
+.slot .fd{margin-top:-3px}
 .slot .fd{font-family:var(--px);font-size:7px}
 .slot.on{transform:translateY(-6px);box-shadow:0 0 0 4px var(--yellow),6px 6px 0 var(--yellow)}
 .slot:hover .ic img{animation:hop .8s steps(4) infinite}
@@ -267,18 +268,18 @@ const GAME_URL_EN='game/en.html';
 const GDL=[['ko','한국어판','한입 더 높이 · 브라우저에서 바로 플레이',GAME_URL],['en','English','ONE BITE HIGHER · Play in your browser',GAME_URL_EN]];
 const I=f=>'img/'+f;
 const CATS=[
- {id:'bag',name:'에코백',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_sq1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_sq2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_sq3.jpg',['wear3.jpg']]]},
- {id:'keyring',name:'키링',food:'CANDY',bg:'#F8D3E3',icon:'candy.png',w:40,items:[['아크릴 키링 · 헬멧','kr_helmet_solo.jpg',['kr_helmet_bag.jpg']],['아크릴 키링 · 비니','kr_beanie_solo.jpg',['kr_beanie.jpg']],['아크릴 키링 · 가이드','kr_guide_solo.jpg',['kr_guide.jpg']]]},
- {id:'pin',name:'핀버튼',food:'NUTS',bg:'#EAD7BE',icon:'nuts.png',w:50,items:[['핀버튼 · 로고','pin/pin01.jpg',[]],['핀버튼 · 헬멧','pin/pin02.jpg',[]],['핀버튼 · 비니','pin/pin03.jpg',[]],['핀버튼 · 가이드','pin/pin04.jpg',[]],['핀버튼 · ONE BITE 사과','pin/pin05.jpg',[]],['핀버튼 · FULL HP?','pin/pin06.jpg',[]],['핀버튼 · ONE MORE BITE!','pin/pin07.jpg',[]],['핀버튼 · 0300M 정상','pin/pin08.jpg',[]],['핀버튼 · MILK +1','pin/pin09.jpg',[]],['핀버튼 · STAGE CLEAR!','pin/pin10.jpg',[]],['핀버튼 · HIDDEN 도시락','pin/pin11.jpg',[]],['핀버튼 · DODGE! 낙석','pin/pin12.jpg',[]],['핀버튼 · 3 PLAYERS','pin/pin13.jpg',[]],['핀버튼 · ENERGY UP! 바나나','pin/pin14.jpg',[]],['핀버튼 · POWER UP','pin/pin15.jpg',[]]]},
- {id:'poster',name:'포스터',food:'SALMON',bg:'#FFD9C2',icon:'salmon.png',w:60,items:[['분해도 포스터 A3','pf1.jpg',[]],['영화 포스터 A3','pf2.jpg',[]],['키비주얼 포스터 A3','pf3.jpg',['poster.jpg']]]},
- {id:'sticker',name:'스티커',food:'APPLE',bg:'#FFC9C9',icon:'apple.png',w:50,items:[['스티커 시트 · STAGE 1','stk1.jpg',['sticker.jpg']],['스티커 시트 · STAGE 2','stk2.jpg',[]],['스티커 시트 · STAGE 3','stk3.jpg',[]]]},
- {id:'postcard',name:'엽서',food:'EGG',bg:'#FFF3B0',icon:'egg.png',w:54,items:[['엽서 · STAGE 1','pc1.jpg',[]],['엽서 · STAGE 2','pc2.jpg',[]],['엽서 · STAGE 3','pc3.jpg',[]]]},
- {id:'note',name:'노트',food:'BANANA',bg:'#FFE58A',icon:'banana.png',w:54,items:[['스프링 노트 · STAGE 1','nb1.jpg',[]],['스프링 노트 · STAGE 2','nb2.jpg',['notebook.jpg']],['스프링 노트 · STAGE 3','nb3.jpg',[]]]},
- {id:'mug',name:'머그·텀블러',food:'MILK',bg:'#DDF3FF',icon:'milk.png',w:36,items:[['머그 · STAGE 1','mug1.jpg',[]],['머그 · STAGE 2','mug2.jpg',[]],['머그 · STAGE 3','mug3.jpg',[]],['텀블러','tumbler.jpg',[]]]},
- {id:'stand',name:'아크릴 스탠드',food:'SPINACH',bg:'#D4F2C8',icon:'spinach.png',w:48,items:[['다이컷 스탠드 · STAGE 1','stand1.jpg',[]],['다이컷 스탠드 · STAGE 2','stand2.jpg',[]],['다이컷 스탠드 · STAGE 3','stand3.jpg',[]]]},
- {id:'tape',name:'마스킹테이프',food:'RICE',bg:'#F0EEE8',icon:'rice.png',w:52,items:[['마스킹테이프 · STAGE 1','tape1.jpg',[]],['마스킹테이프 · STAGE 2','tape2.jpg',[]],['마스킹테이프 · STAGE 3','tape3.jpg',[]]]},
- {id:'wear',name:'의류',food:'BEEF',bg:'#F5C9C0',icon:'beef.png',w:56,items:[['헬멧 · 레드 등반 바람막이','outfit/jk_helmet.jpg',[]],['비니 · 옐로 패딩 재킷','outfit/jk_beanie.jpg',[]],['가이드 · 그린 필드 재킷','outfit/jk_guide.jpg',[]],['클라이머 등반 팬츠','outfit/pants.jpg',[]]]},
- {id:'acc',name:'잡화',food:'CHICKEN',bg:'#FFE2B8',icon:'chicken.png',w:52,items:[['헬멧 · 옐로 안전모','outfit/hat_helmet.jpg',[]],['비니 · 스카이 방울 비니','outfit/hat_beanie.jpg',[]],['가이드 · 브라운 레인저 햇','outfit/hat_guide.jpg',[]],['헬멧 · 블루 롤탑 백팩','outfit/bp_helmet.jpg',[]],['비니 · 레드 등산 배낭','outfit/bp_beanie.jpg',[]],['가이드 · 캔버스 럭색','outfit/bp_guide.jpg',[]]]}
+ {id:'bag',en:'ECO BAG',name:'에코백',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_sq1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_sq2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_sq3.jpg',['wear3.jpg']]]},
+ {id:'keyring',en:'KEYRING',name:'키링',food:'CANDY',bg:'#F8D3E3',icon:'candy.png',w:40,items:[['아크릴 키링 · 헬멧','kr_helmet_solo.jpg',['kr_helmet_bag.jpg']],['아크릴 키링 · 비니','kr_beanie_solo.jpg',['kr_beanie.jpg']],['아크릴 키링 · 가이드','kr_guide_solo.jpg',['kr_guide.jpg']]]},
+ {id:'pin',en:'PIN BUTTON',name:'핀버튼',food:'NUTS',bg:'#EAD7BE',icon:'nuts.png',w:50,items:[['핀버튼 · 로고','pin/pin01.jpg',[]],['핀버튼 · 헬멧','pin/pin02.jpg',[]],['핀버튼 · 비니','pin/pin03.jpg',[]],['핀버튼 · 가이드','pin/pin04.jpg',[]],['핀버튼 · ONE BITE 사과','pin/pin05.jpg',[]],['핀버튼 · FULL HP?','pin/pin06.jpg',[]],['핀버튼 · ONE MORE BITE!','pin/pin07.jpg',[]],['핀버튼 · 0300M 정상','pin/pin08.jpg',[]],['핀버튼 · MILK +1','pin/pin09.jpg',[]],['핀버튼 · STAGE CLEAR!','pin/pin10.jpg',[]],['핀버튼 · HIDDEN 도시락','pin/pin11.jpg',[]],['핀버튼 · DODGE! 낙석','pin/pin12.jpg',[]],['핀버튼 · 3 PLAYERS','pin/pin13.jpg',[]],['핀버튼 · ENERGY UP! 바나나','pin/pin14.jpg',[]],['핀버튼 · POWER UP','pin/pin15.jpg',[]]]},
+ {id:'poster',en:'POSTER',name:'포스터',food:'SALMON',bg:'#FFD9C2',icon:'salmon.png',w:60,items:[['분해도 포스터 A3','pf1.jpg',[]],['영화 포스터 A3','pf2.jpg',[]],['키비주얼 포스터 A3','pf3.jpg',['poster.jpg']]]},
+ {id:'sticker',en:'STICKER',name:'스티커',food:'APPLE',bg:'#FFC9C9',icon:'apple.png',w:50,items:[['스티커 시트 · STAGE 1','stk1.jpg',['sticker.jpg']],['스티커 시트 · STAGE 2','stk2.jpg',[]],['스티커 시트 · STAGE 3','stk3.jpg',[]]]},
+ {id:'postcard',en:'POSTCARD',name:'엽서',food:'EGG',bg:'#FFF3B0',icon:'egg.png',w:54,items:[['엽서 · STAGE 1','pc1.jpg',[]],['엽서 · STAGE 2','pc2.jpg',[]],['엽서 · STAGE 3','pc3.jpg',[]]]},
+ {id:'note',en:'NOTEBOOK',name:'노트',food:'BANANA',bg:'#FFE58A',icon:'banana.png',w:54,items:[['스프링 노트 · STAGE 1','nb1.jpg',[]],['스프링 노트 · STAGE 2','nb2.jpg',['notebook.jpg']],['스프링 노트 · STAGE 3','nb3.jpg',[]]]},
+ {id:'mug',en:'MUG·TUMBLER',name:'머그·텀블러',food:'MILK',bg:'#DDF3FF',icon:'milk.png',w:36,items:[['머그 · STAGE 1','mug1.jpg',[]],['머그 · STAGE 2','mug2.jpg',[]],['머그 · STAGE 3','mug3.jpg',[]],['텀블러','tumbler.jpg',[]]]},
+ {id:'stand',en:'ACRYLIC STAND',name:'아크릴 스탠드',food:'SPINACH',bg:'#D4F2C8',icon:'spinach.png',w:48,items:[['다이컷 스탠드 · STAGE 1','stand1.jpg',[]],['다이컷 스탠드 · STAGE 2','stand2.jpg',[]],['다이컷 스탠드 · STAGE 3','stand3.jpg',[]]]},
+ {id:'tape',en:'MASKING TAPE',name:'마스킹테이프',food:'RICE',bg:'#F0EEE8',icon:'rice.png',w:52,items:[['마스킹테이프 · STAGE 1','tape1.jpg',[]],['마스킹테이프 · STAGE 2','tape2.jpg',[]],['마스킹테이프 · STAGE 3','tape3.jpg',[]]]},
+ {id:'wear',en:'APPAREL',name:'의류',food:'BEEF',bg:'#F5C9C0',icon:'beef.png',w:56,items:[['헬멧 · 레드 등반 바람막이','outfit/jk_helmet.jpg',[]],['비니 · 옐로 패딩 재킷','outfit/jk_beanie.jpg',[]],['가이드 · 그린 필드 재킷','outfit/jk_guide.jpg',[]],['클라이머 등반 팬츠','outfit/pants.jpg',[]]]},
+ {id:'acc',en:'ACCESSORIES',name:'잡화',food:'CHICKEN',bg:'#FFE2B8',icon:'chicken.png',w:52,items:[['헬멧 · 옐로 안전모','outfit/hat_helmet.jpg',[]],['비니 · 스카이 방울 비니','outfit/hat_beanie.jpg',[]],['가이드 · 브라운 레인저 햇','outfit/hat_guide.jpg',[]],['헬멧 · 블루 롤탑 백팩','outfit/bp_helmet.jpg',[]],['비니 · 레드 등산 배낭','outfit/bp_beanie.jpg',[]],['가이드 · 캔버스 럭색','outfit/bp_guide.jpg',[]]]}
 ];
 const PRICE={bag:22000,keyring:9000,pin:3000,poster:12000,sticker:4000,postcard:2000,note:8000,mug:16000,stand:15000,tape:5000};
 const PRICE_ITEM={'텀블러':24000,'헬멧 · 레드 등반 바람막이':89000,'비니 · 옐로 패딩 재킷':129000,'가이드 · 그린 필드 재킷':109000,'클라이머 등반 팬츠':69000,'헬멧 · 옐로 안전모':35000,'비니 · 스카이 방울 비니':29000,'가이드 · 브라운 레인저 햇':45000,'헬멧 · 블루 롤탑 백팩':89000,'비니 · 레드 등산 배낭':119000,'가이드 · 캔버스 럭색':99000};
@@ -313,7 +314,7 @@ function dlCard(d,i){return `<button class="dl" data-dl="${i}"><img class="pixel
 
 function inventory(){
   const c=CATS[state.cat];
-  return `<div class="slots">${CATS.map((s,i)=>`<button class="slot${i===state.cat?' on':''}" data-cat="${i}" style="background:${s.bg}" aria-pressed="${i===state.cat}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.food}</span></button>`).join('')}</div>
+  return `<div class="slots">${CATS.map((s,i)=>`<button class="slot${i===state.cat?' on':''}" data-cat="${i}" style="background:${s.bg}" aria-pressed="${i===state.cat}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.en}</span></button>`).join('')}</div>
   <div class="bag"><div class="bag-head"><img class="pixel" src="${I(c.icon)}" alt=""><strong>${c.name}</strong><span class="chip">${c.food} GET! · ${c.items.length}개</span></div>
   <div class="grid">${PRODUCTS.filter(p=>p.cat===c.id).map(card).join('')}</div></div>`;
 }
@@ -347,7 +348,7 @@ const VIEWS={
     <section class="sec"><div class="sec-head"><h2 class="sec-title" style="color:var(--green)">FREE DOWNLOAD</h2></div><div class="dls">${DLS.map(dlCard).join('')}</div><p class="note" id="dlNote"></p></section>
   </div>`,
  shop:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--yellow);font-size:20px">ITEM SHOP</h1><span class="more">${PRODUCTS.length}개 아이템</span></div>
-   <div class="slots" style="margin-bottom:24px"><button class="slot${state.shopCat==='all'?' on':''}" data-shop="all" style="background:#fff"><span class="ic"><img class="pixel" src="img/block.png" alt="" style="width:44px"></span><span class="nm">전체</span><span class="fd">ALL</span></button>${CATS.map(s=>`<button class="slot${state.shopCat===s.id?' on':''}" data-shop="${s.id}" style="background:${s.bg}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.food}</span></button>`).join('')}</div>
+   <div class="slots" style="margin-bottom:24px"><button class="slot${state.shopCat==='all'?' on':''}" data-shop="all" style="background:#fff"><span class="ic"><img class="pixel" src="img/block.png" alt="" style="width:44px"></span><span class="nm">전체</span><span class="fd">ALL</span></button>${CATS.map(s=>`<button class="slot${state.shopCat===s.id?' on':''}" data-shop="${s.id}" style="background:${s.bg}"><span class="ic"><img class="pixel" src="${I(s.icon)}" alt="" style="width:${s.w}px"></span><span class="nm">${s.name}</span><span class="fd">${s.en}</span></button>`).join('')}</div>
    <div class="grid">${PRODUCTS.filter(p=>state.shopCat==='all'||p.cat===state.shopCat).map(card).join('')}</div></section></div>`,
  lookbook:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--pink);font-size:20px">LOOKBOOK</h1></div><div class="lookgrid">${LOOKS.map(lookCard).join('')}</div></section></div>`,
  assets:()=>`<div class="wrap"><section class="sec"><div class="sec-head"><h1 class="sec-title" style="color:var(--cyan);font-size:20px">GAME ASSETS</h1><span class="more">게임에 실제로 쓰인 픽셀 에셋</span></div>
