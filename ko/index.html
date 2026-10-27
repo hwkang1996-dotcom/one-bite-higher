@@ -1,1 +1,75 @@
-<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=../game/ko.html"><title>ONE BITE HIGHER</title><a href="../game/ko.html">ONE BITE HIGHER</a>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ONE BITE HIGHER · 한입 더 높이</title>
+<link rel="icon" href="../img/app_icon.png">
+<script>
+(function(){
+  var ua=navigator.userAgent, q=location.search;
+  var mobile=/Android|iPhone|iPod|Mobile|iPad/i.test(ua) || (navigator.maxTouchPoints>1 && /Macintosh/.test(ua));
+  if(q.indexOf('send')<0 && (!mobile || q.indexOf('play')>=0)) location.replace('../game/ko.html');
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=../game/ko.html"></noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+:root{--ink:#1A1A2E;--deep:#0B0B14;--line:#33335A;--yellow:#FFC21A;--muted:#A9AFCC;--px:'Press Start 2P',ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:#fff;font-family:'Noto Sans KR',system-ui,sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:440px;margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 20px max(28px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;min-height:100svh}
+.logo{width:min(260px,70%);image-rendering:pixelated;margin-top:8px}
+.cast{display:flex;gap:6px;align-items:flex-end;margin:4px 0 -6px}
+.cast img{width:58px;image-rendering:pixelated;animation:hop 1.2s steps(2) infinite}
+.cast img:nth-child(2){animation-delay:.2s}.cast img:nth-child(3){animation-delay:.4s}
+@keyframes hop{50%{transform:translateY(-6px)}}
+h1{font-size:24px;line-height:1.35;font-weight:900;margin:0}
+.sub{color:var(--muted);font-size:15px;margin:0;line-height:1.6}
+.btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font:700 17px/1 'Noto Sans KR',system-ui,sans-serif;padding:18px;border:4px solid var(--yellow);background:transparent;color:var(--yellow);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.btn.main{background:var(--yellow);color:var(--ink);font-size:19px;padding:20px}
+.btn:active{transform:translateY(2px)}
+.row{display:flex;gap:10px;width:100%}.row .btn{font-size:15px;padding:15px 8px}
+.tip{background:var(--deep);border:3px solid var(--line);padding:14px 16px;font-size:13.5px;line-height:1.7;color:#d9dcf0;text-align:left;width:100%}
+.tip b{color:var(--yellow)}
+.url{width:100%}
+.url small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:6px}
+.url code{display:block;font:700 14px/1.5 ui-monospace,Menlo,monospace;color:#fff;background:var(--deep);border:3px dashed var(--line);padding:10px;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.links{display:flex;justify-content:space-between;width:100%;font-size:13px;margin-top:auto;padding-top:6px}
+.links a{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--yellow);color:var(--ink);font:700 14px 'Noto Sans KR',sans-serif;padding:10px 18px;border:3px solid var(--ink);opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="../img/logo_yellow.png" alt="ONE BITE HIGHER">
+  <div class="cast"><img src="../img/beanie_cheer.png" alt=""><img src="../img/helmet_cheer.png" alt=""><img src="../img/guide_cheer.png" alt=""></div>
+  <h1>이 게임은<br>노트북에서 플레이해요</h1>
+  <p class="sub">키보드로 조작하는 게임이에요.<br>아래 버튼으로 링크를 노트북에 보내세요.</p>
+  <button class="btn main" id="send">📤 노트북으로 보내기</button>
+  <div class="row">
+    <button class="btn" id="copy">🔗 링크 복사</button>
+    <a class="btn" id="mail" href="#">✉️ 메일</a>
+  </div>
+  <div class="tip">아이폰 + 맥북이면 <b>보내기 → AirDrop → 내 맥</b>을 누르면 맥에서 바로 열려요.<br>카톡이면 <b>나와의 채팅</b>으로 보내고 노트북 카톡에서 열면 돼요.</div>
+  <div class="url"><small>노트북 Chrome 주소창에 직접 입력해도 돼요</small><code id="u">hwkang1996-dotcom.github.io/<wbr>one-bite-higher/ko/</code></div>
+  <div class="links"><a href="../game/ko.html">그래도 폰으로 구경하기 ›</a><a href="../en/?send">English version ›</a></div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+var URL_='https://hwkang1996-dotcom.github.io/one-bite-higher/ko/', T={"copied": "복사됐어요!", "text": "한입 더 높이 · 노트북에서 열어서 플레이하세요", "subject": "ONE BITE HIGHER 노트북에서 플레이"};
+var toast=function(t){var e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},1600)};
+function copy(){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(URL_).then(function(){toast(T.copied)},fallback)}else fallback();
+  function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('u'));var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');toast(T.copied)}catch(e){}}
+}
+document.getElementById('copy').onclick=copy;
+document.getElementById('send').onclick=function(){
+  if(navigator.share){navigator.share({title:'ONE BITE HIGHER',text:T.text,url:URL_}).catch(function(){})}else copy();
+};
+document.getElementById('mail').href='mailto:?subject='+encodeURIComponent(T.subject)+'&body='+encodeURIComponent(T.text+'\n'+URL_);
+</script>
+</body>
+</html>
