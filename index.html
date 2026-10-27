@@ -267,7 +267,7 @@ const GAME_URL_EN='game/en.html';
 const GDL=[['ko','한국어판','한입 더 높이 · 브라우저에서 바로 플레이',GAME_URL],['en','English','ONE BITE HIGHER · Play in your browser',GAME_URL_EN]];
 const I=f=>'img/'+f;
 const CATS=[
- {id:'bag',name:'가방',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_big1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_big2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_big3.jpg',['wear3.jpg']]]},
+ {id:'bag',name:'에코백',food:'BENTO',bg:'#CFE7FF',icon:'bento.png',w:54,items:[['빅 캐릭터 에코백 · 헬멧','tote_sq1.jpg',['wear1.jpg']],['빅 캐릭터 에코백 · 비니','tote_sq2.jpg',['tote_wear.jpg']],['빅 캐릭터 에코백 · 가이드','tote_sq3.jpg',['wear3.jpg']]]},
  {id:'keyring',name:'키링',food:'CANDY',bg:'#F8D3E3',icon:'candy.png',w:40,items:[['아크릴 키링 · 헬멧','kr_helmet_solo.jpg',['kr_helmet_bag.jpg']],['아크릴 키링 · 비니','kr_beanie_solo.jpg',['kr_beanie.jpg']],['아크릴 키링 · 가이드','kr_guide_solo.jpg',['kr_guide.jpg']]]},
  {id:'pin',name:'핀버튼',food:'NUTS',bg:'#EAD7BE',icon:'nuts.png',w:50,items:[['핀버튼 · 로고','pin/pin01.jpg',[]],['핀버튼 · 헬멧','pin/pin02.jpg',[]],['핀버튼 · 비니','pin/pin03.jpg',[]],['핀버튼 · 가이드','pin/pin04.jpg',[]],['핀버튼 · ONE BITE 사과','pin/pin05.jpg',[]],['핀버튼 · FULL HP?','pin/pin06.jpg',[]],['핀버튼 · ONE MORE BITE!','pin/pin07.jpg',[]],['핀버튼 · 0300M 정상','pin/pin08.jpg',[]],['핀버튼 · MILK +1','pin/pin09.jpg',[]],['핀버튼 · STAGE CLEAR!','pin/pin10.jpg',[]],['핀버튼 · HIDDEN 도시락','pin/pin11.jpg',[]],['핀버튼 · DODGE! 낙석','pin/pin12.jpg',[]],['핀버튼 · 3 PLAYERS','pin/pin13.jpg',[]],['핀버튼 · ENERGY UP! 바나나','pin/pin14.jpg',[]],['핀버튼 · POWER UP','pin/pin15.jpg',[]],['핀버튼 5종 세트 (구버전)','buttons.jpg',[]]]},
  {id:'poster',name:'포스터',food:'SALMON',bg:'#FFD9C2',icon:'salmon.png',w:60,items:[['분해도 포스터 A3','pf1.jpg',[]],['영화 포스터 A3','pf2.jpg',[]],['키비주얼 포스터 A3','pf3.jpg',['poster.jpg']]]},
@@ -280,7 +280,10 @@ const CATS=[
  {id:'wear',name:'의류',food:'BEEF',bg:'#F5C9C0',icon:'beef.png',w:56,items:[['헬멧 · 레드 등반 바람막이','outfit/jk_helmet.jpg',[]],['비니 · 옐로 패딩 재킷','outfit/jk_beanie.jpg',[]],['가이드 · 그린 필드 재킷','outfit/jk_guide.jpg',[]],['클라이머 등반 팬츠','outfit/pants.jpg',[]]]},
  {id:'acc',name:'잡화',food:'CHICKEN',bg:'#FFE2B8',icon:'chicken.png',w:52,items:[['헬멧 · 옐로 안전모','outfit/hat_helmet.jpg',[]],['비니 · 스카이 방울 비니','outfit/hat_beanie.jpg',[]],['가이드 · 브라운 레인저 햇','outfit/hat_guide.jpg',[]],['헬멧 · 블루 롤탑 백팩','outfit/bp_helmet.jpg',[]],['비니 · 레드 등산 배낭','outfit/bp_beanie.jpg',[]],['가이드 · 캔버스 럭색','outfit/bp_guide.jpg',[]]]}
 ];
-const PRODUCTS=[];CATS.forEach(c=>c.items.forEach(([n,img,extra],i)=>PRODUCTS.push({id:c.id+'-'+i,cat:c.id,name:n,img,imgs:[img,...extra]})));
+const PRICE={bag:22000,keyring:9000,pin:3000,poster:12000,sticker:4000,postcard:2000,note:8000,mug:16000,stand:15000,tape:5000};
+const PRICE_ITEM={'핀버튼 5종 세트 (구버전)':12000,'텀블러':24000,'헬멧 · 레드 등반 바람막이':89000,'비니 · 옐로 패딩 재킷':129000,'가이드 · 그린 필드 재킷':109000,'클라이머 등반 팬츠':69000,'헬멧 · 옐로 안전모':35000,'비니 · 스카이 방울 비니':29000,'가이드 · 브라운 레인저 햇':45000,'헬멧 · 블루 롤탑 백팩':89000,'비니 · 레드 등산 배낭':119000,'가이드 · 캔버스 럭색':99000};
+const won=n=>n.toLocaleString('ko-KR')+'원';
+const PRODUCTS=[];CATS.forEach(c=>c.items.forEach(([n,img,extra],i)=>PRODUCTS.push({id:c.id+'-'+i,cat:c.id,name:n,img,imgs:[img,...extra],price:PRICE_ITEM[n]||PRICE[c.id]||0})));
 const NEWS=[['2026.10.23','GOODS','#FFC21A','STAGE 3 밤 설산 컬렉션 발매'],['2026.10.20','VIDEO','#4FD8FF','공식 트레일러 공개 예정'],['2026.10.15','FREE','#3FE0A0','스테이지 배경화면 3종 무료 배포'],['2026.10.01','GAME','#FF5C9A','「한입 더 높이」 웹 버전 오픈']];
 const LOOKS=[['빅 캐릭터 에코백 · 헬멧','TOTE','#4FA8FF','wear1.jpg'],['동네 오락실에서','ARCADE','#FF5C9A','arcade_photo.jpg'],['키링 · 비니','KEYRING','#FFC21A','kr_beanie.jpg'],['빅 캐릭터 에코백 · 비니','TOTE','#4FA8FF','tote_wear.jpg'],['빨간 오락기 · STAGE 2','ARCADE','#FF5C9A','arc_red.jpg'],['키링 · 가이드','KEYRING','#FFC21A','kr_guide.jpg'],['빅 캐릭터 에코백 · 가이드','TOTE','#4FA8FF','wear3.jpg'],['집에서 한 판','ARCADE','#FF5C9A','arc_seat.jpg'],['레트로 PC로 한 판','RETRO','#3FE0A0','retro1.jpg'],['오락기 목업','ARCADE','#FF5C9A','arcade3d.jpg'],['키링 · 헬멧','KEYRING','#FFC21A','kr_helmet_bag.jpg'],['서서 한 판','ARCADE','#FF5C9A','arc_kor.jpg']];
 const LOGS=[['01','10.13','기획서 · 먹은 것이 점프가 되는 등반 플랫포머','log_plan.jpg'],['02','10.13','픽셀 시안 v2 · 네온 플랫폼 9컷','log_v2.jpg'],['03','10.13','발표 후 피드백 · 방향 전환의 계기','log_feedback.jpg'],['04','10.15','레퍼런스 · 등반 플랫포머 20컷','log_ref.jpg'],['05','10.15','주인공 v2.1 · 24×32 동작 시트','log_sprite.jpg'],['06','10.15','A안 vs B안 · 발판과 정상','log_ab.jpg'],['07','10.15','타일셋 · 바위벽 / 설산','log_tiles.jpg'],['08','10.20','게임 v26 · ONE BITE HIGHER','log_v26.jpg']];
@@ -301,7 +304,7 @@ let state={cat:0,shopCat:'all'};
 let cart=[];try{cart=JSON.parse(localStorage.getItem('obh_cart')||'[]')}catch(e){cart=[]}
 const saveCart=()=>{try{localStorage.setItem('obh_cart',JSON.stringify(cart))}catch(e){};$('#cartN').textContent=cart.length};
 
-function card(p){return `<button class="card" data-p="${p.id}"><div class="ph"><img src="${I(p.img)}" alt="${esc(p.name)}" loading="lazy"></div><span class="nm">${esc(p.name)}</span><span class="pr">[가격]원</span></button>`}
+function card(p){return `<button class="card" data-p="${p.id}"><div class="ph"><img src="${I(p.img)}" alt="${esc(p.name)}" loading="lazy"></div><span class="nm">${esc(p.name)}</span><span class="pr">${won(p.price)}</span></button>`}
 function lookCard(l){return `<button class="look" data-img="${l[3]}" data-cap="${esc(l[0])}"><div class="ph"><img src="${I(l[3])}" alt="${esc(l[0])}" loading="lazy"></div><span class="cap">${esc(l[0])}</span><span class="tg" style="color:${l[2]}">${l[1]}</span></button>`}
 function logCard(g){return `<button class="log" data-img="${g[3]}" data-cap="${esc(g[2])}"><div class="ph"><img src="${I(g[3])}" alt="" loading="lazy"></div><div class="bd"><span class="no">LOG ${g[0]} · ${g[1]}</span><span class="ti">${esc(g[2])}</span></div></button>`}
 function asCard(a){return `<button class="as" data-img="as/${a[0]}.png" data-cap="${esc(a[1])}" data-zoom="1"><span class="ic"><img src="img/as/${a[0]}.png" alt="" loading="lazy"></span><span>${esc(a[1])}</span></button>`}
@@ -407,7 +410,7 @@ function openProduct(id){
   $('#layer').innerHTML=`<div class="overlay" role="dialog" aria-label="${esc(p.name)}"><div class="pm">
    <div class="big"><img id="pmBig" src="${I(p.img)}" alt="${esc(p.name)}"></div>
    <div class="info"><span class="chip" style="align-self:flex-start;background:${c.bg}">${c.name} · ${c.food}</span><h2>${esc(p.name)}</h2>
-    <span class="px" style="font-size:12px;color:var(--yellow)">[가격]원</span>
+    <span class="px" style="font-size:14px;color:var(--yellow)">${won(p.price)}</span>
     <p style="margin:0;color:var(--muted)">ONE BITE HIGHER 공식 굿즈예요. 상세 정보는 준비 중이에요.</p>
     ${p.imgs.length>1?`<div class="thumbs">${p.imgs.map((m,i)=>`<button data-thumb="${m}" class="${i?'':'on'}" aria-label="사진 ${i+1}"><img src="${I(m)}" alt=""></button>`).join('')}</div>`:''}
     <button class="btn" data-add="${p.id}" style="align-self:flex-start">+ 장바구니 담기</button></div>
@@ -417,10 +420,10 @@ function openImage(img,cap,zoom){
   $('#layer').innerHTML=`<div class="overlay" role="dialog" aria-label="${cap}"><div class="pm" style="flex-direction:column"><div class="big${zoom?' zoom':''}" style="flex:none"><img src="${I(img)}" alt="${cap}"></div><div class="info" style="flex:none;padding:16px 20px"><strong>${cap}</strong></div><button class="x" data-act="close" aria-label="닫기"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#fff" stroke-width="4"></path></svg></button></div></div>`;
 }
 function openCart(){
-  const items=cart.map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id);return p?`<li><img src="${I(p.img)}" alt=""><span>${esc(p.name)}</span><button data-rm="${i}">빼기</button></li>`:''}).join('');
+  const items=cart.map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id);return p?`<li><img src="${I(p.img)}" alt=""><span>${esc(p.name)}<small style="display:block;color:var(--yellow);font-weight:500">${won(p.price)}</small></span><button data-rm="${i}">빼기</button></li>`:''}).join('');
   $('#layer').innerHTML=`<div class="overlay" data-act="close" style="justify-content:flex-end;padding:0"></div><aside class="cart" role="dialog" aria-label="장바구니">
    <div style="display:flex;justify-content:space-between;align-items:center"><span class="px" style="font-size:13px;color:var(--yellow)">INVENTORY</span><button data-act="close" class="px" style="font-size:10px">닫기 ✕</button></div>
-   ${cart.length?`<ul>${items}</ul><button class="btn" data-act="order">주문하기 (${cart.length})</button><p class="note" id="orderNote"></p>`:`<p style="color:var(--muted)">아직 담은 아이템이 없어요.</p><a class="btn" href="#shop" data-go="shop" style="align-self:flex-start">ITEM SHOP 가기</a>`}</aside>`;
+   ${cart.length?`<ul>${items}</ul><div style="display:flex;justify-content:space-between;font-weight:700"><span>합계</span><span style="color:var(--yellow)">${won(cart.reduce((t,id)=>{const q=PRODUCTS.find(x=>x.id===id);return t+(q?q.price:0)},0))}</span></div><button class="btn" data-act="order">주문하기 (${cart.length})</button><p class="note" id="orderNote"></p>`:`<p style="color:var(--muted)">아직 담은 아이템이 없어요.</p><a class="btn" href="#shop" data-go="shop" style="align-self:flex-start">ITEM SHOP 가기</a>`}</aside>`;
 }
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1600)}
 
