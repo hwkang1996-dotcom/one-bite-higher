@@ -30,6 +30,8 @@ h1{font-size:24px;line-height:1.35;font-weight:900;margin:0}
 .btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font:700 17px/1 'Noto Sans KR',system-ui,sans-serif;padding:18px;border:4px solid var(--yellow);background:transparent;color:var(--yellow);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .btn.main{background:var(--yellow);color:var(--ink);font-size:19px;padding:20px}
 .btn:active{transform:translateY(2px)}
+.btn.kakao{background:#FEE500;border-color:#FEE500;color:#191919}
+.btn[hidden]{display:none}
 .row{display:flex;gap:10px;width:100%}.row .btn{font-size:15px;padding:15px 8px}
 .tip{background:var(--deep);border:3px solid var(--line);padding:14px 16px;font-size:13.5px;line-height:1.7;color:#d9dcf0;text-align:left;width:100%}
 .tip b{color:var(--yellow)}
@@ -49,6 +51,7 @@ h1{font-size:24px;line-height:1.35;font-weight:900;margin:0}
   <h1>This game is played<br>on a laptop</h1>
   <p class="sub">It uses the keyboard.<br>Send the link to your laptop below.</p>
   <button class="btn main" id="send">📤 Send to my laptop</button>
+  <a class="btn kakao" id="kakao" href="#" hidden>💬 </a>
   <div class="row">
     <button class="btn" id="copy">🔗 Copy link</button>
     <a class="btn" id="mail" href="#">✉️ Email</a>
@@ -59,15 +62,23 @@ h1{font-size:24px;line-height:1.35;font-weight:900;margin:0}
 </main>
 <div class="toast" id="toast"></div>
 <script>
-var URL_='https://hwkang1996-dotcom.github.io/one-bite-higher/en/', T={"copied": "Copied!", "text": "ONE BITE HIGHER - open on a laptop to play", "subject": "ONE BITE HIGHER - play on my laptop"};
+var URL_='https://hwkang1996-dotcom.github.io/one-bite-higher/en/', T={"copied": "Copied!", "text": "ONE BITE HIGHER - open on a laptop to play", "subject": "ONE BITE HIGHER - play on my laptop", "kakao": "", "kakaoIn": "", "kakaoInToast": ""};
 var toast=function(t){var e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},1600)};
 function copy(){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(URL_).then(function(){toast(T.copied)},fallback)}else fallback();
   function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('u'));var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');toast(T.copied)}catch(e){}}
 }
 document.getElementById('copy').onclick=copy;
+var UA=navigator.userAgent, ANDROID=/Android/i.test(UA), INKAKAO=/KAKAOTALK/i.test(UA);
+var MSG=T.text+'\n'+URL_;
+function intent(pkg){return 'intent:#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT='+encodeURIComponent(MSG)+(pkg?';package='+pkg:'')+';end'}
+var kk=document.getElementById('kakao');
+if(T.kakao && ANDROID && !INKAKAO){kk.hidden=false;kk.href=intent('com.kakao.talk');}
+if(T.kakao && INKAKAO){kk.hidden=false;kk.textContent='💬 '+T.kakaoIn;kk.onclick=function(e){e.preventDefault();copy();toast(T.kakaoInToast)};}
 document.getElementById('send').onclick=function(){
-  if(navigator.share){navigator.share({title:'ONE BITE HIGHER',text:T.text,url:URL_}).catch(function(){})}else copy();
+  if(navigator.share){navigator.share({title:'ONE BITE HIGHER',text:T.text,url:URL_}).catch(function(){})}
+  else if(ANDROID && !INKAKAO){location.href=intent('')}
+  else {copy(); if(INKAKAO&&T.kakaoInToast) setTimeout(function(){toast(T.kakaoInToast)},1700)}
 };
 document.getElementById('mail').href='mailto:?subject='+encodeURIComponent(T.subject)+'&body='+encodeURIComponent(T.text+'\n'+URL_);
 </script>
